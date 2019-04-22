@@ -4,7 +4,26 @@ const sequelize = new Sequelize('database', 'username', 'password', {
     dialect: 'postgres',
     host: '/path/to/socket_directory'
 });
-
+class DocusignEnvelope extends Model {}
+DocusignEnvelope.init({
+    docusign_envelope_id:{
+        type:sequelize.STRING(64),
+        allowNull:false
+    },
+    docusign_template_id:{
+        type:sequelize.STRING(64),
+        allowNull:false
+    },
+    user_id:{
+        type:sequelize.DECIMAL(10,0),
+        allowNull:false
+    },
+    is_completed:{
+        type:sequelize.DECIMAL(1,0),
+        allowNull:false
+    }
+    
+})
 class TermsOfUse extends Model { }
 TermsOfUse.init({
     terms_of_use_id: {
@@ -78,7 +97,7 @@ TermsOfUseAgreeabilityType.init({
 }, { sequelize, modelName: 'terms_of_use_agreeability' })
 TermsOfUse.hasOne(TermsOfUseType)
 TermsOfUse.hasOne(TermsOfUseAgreeabilityType)
-
+TermsOfUse.hasOne(DocusignEnvelope)
 // create table 'informix'.terms_of_use(
 //     terms_of_use_id DECIMAL(10, 0) NOT NULL,
 //     terms_text TEXT,
@@ -139,21 +158,4 @@ TermsOfUse.hasOne(TermsOfUseAgreeabilityType)
 //     terms_of_use_id DECIMAL(10, 0) NOT NULL,
 //     docusign_template_id VARCHAR(64) NOT NULL
 // )
-
-class TermsOfService extends Model { }
-TermsOfService.init({
-    termsOfUseid: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    terms_text: sequelize.TEXT,
-    // terms_of_use_type_id:{
-    //     foreignKey:true
-    // },
-    // Timestamps
-    createdAt: Sequelize.DATE,
-    updatedAt: Sequelize.DATE,
-
-}, { sequelize, modelName: 'termsOfService' })
-module.exports = TermsOfService
+module.exports = {TermsOfService,TermsOfUseAgreeabilityType,TermsOfUseType}
